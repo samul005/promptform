@@ -307,8 +307,8 @@
                                 const idx = csvHeaders.indexOf(h);
                                 obj[h] = idx > -1 ? row[idx] : '';
                             });
-                            obj.MARK_AS_NEW = String(obj.MARK_AS_NEW).toUpperCase() === 'TRUE';
-                            obj.MARK_AS_TRENDING = String(obj.MARK_AS_TRENDING).toUpperCase() === 'TRUE';
+                            obj.MARK_AS_NEW = String(obj.MARK_AS_NEW).toLowerCase() === 'true';
+                            obj.MARK_AS_TRENDING = String(obj.MARK_AS_TRENDING).toLowerCase() === 'true';
                             if (obj.PROMPT_TITLE) { obj.id = generateId(); newItems.push(obj); }
                         }
                     }
@@ -340,7 +340,7 @@
                     const rows = [HEADERS];
                     prompts.forEach(p => {
                         rows.push(HEADERS.map(h => {
-                            if (['MARK_AS_NEW', 'MARK_AS_TRENDING'].includes(h)) return p[h] ? 'TRUE' : 'FALSE';
+                            if (['MARK_AS_NEW', 'MARK_AS_TRENDING'].includes(h)) return p[h] ? 'true' : 'false';
                             return p[h];
                         }));
                     });
@@ -534,10 +534,7 @@
                 }
             }, [isOpen, initialData]);
 
-            const handleFile = (e) => {
-                const f = e.target.files[0];
-                if(f) { const r = new FileReader(); r.onload = (ev) => setFormData(prev => ({...prev, IMAGE_URL: ev.target.result})); r.readAsDataURL(f); }
-            };
+
 
             const handleAutoGenerate = async () => {
                 if (!formData.PROMPT_CONTENT || formData.PROMPT_CONTENT.length < 10) {
@@ -624,13 +621,25 @@
                             </div>
                              <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Category</label>
-                                <input type="text" className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-500 outline-none" 
-                                    value={formData.CATEGORY || ''} onChange={e => setFormData({...formData, CATEGORY: e.target.value})} />
+                                <select className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-500 outline-none" 
+                                    value={formData.CATEGORY || ''} onChange={e => setFormData({...formData, CATEGORY: e.target.value})}>
+                                    <option value="">Select Category</option>
+                                    <option value="freefire">freefire</option>
+                                    <option value="men">men</option>
+                                    <option value="women">women</option>
+                                    <option value="couple">couple</option>
+                                </select>
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Sub Category</label>
-                                <input type="text" className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-500 outline-none" 
-                                    value={formData.SUB_CATEGORY || ''} onChange={e => setFormData({...formData, SUB_CATEGORY: e.target.value})} />
+                                <select className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-500 outline-none" 
+                                    value={formData.SUB_CATEGORY || ''} onChange={e => setFormData({...formData, SUB_CATEGORY: e.target.value})}>
+                                    <option value="">Select Sub Category</option>
+                                    <option value="export">export</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Couple">Couple</option>
+                                </select>
                             </div>
                         </div>
 
@@ -639,8 +648,8 @@
                                 {formData.IMAGE_URL ? <img src={formData.IMAGE_URL} className="w-full h-full object-cover" /> : <i className="fas fa-image text-slate-300"></i>}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Image Asset</label>
-                                <input type="file" accept="image/*" onChange={handleFile} className="text-xs w-full text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700" />
+                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Image Link</label>
+                                <input type="url" placeholder="https://example.com/image.jpg" value={formData.IMAGE_URL || ''} onChange={e => setFormData({...formData, IMAGE_URL: e.target.value})} className="text-sm w-full px-3 py-2 border rounded focus:ring-2 focus:ring-indigo-500 outline-none" />
                             </div>
                         </div>
 
